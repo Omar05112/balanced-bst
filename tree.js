@@ -131,7 +131,42 @@ export default class Tree {
     }
   }
 
-  height(value){
-    
+  height(value) {
+    if (!this.includes(value)) return undefined;
+    let node = this.root;
+    while (node !== null) {
+      if (value < node.data) {
+        node = node.left;
+      } else if (value > node.data) {
+        node = node.right;
+      } else {
+        break;
+      }
+    }
+    return findHeight(node);
+    function findHeight(node) {
+      if (node === null) return -1;
+      else {
+        return 1 + Math.max(findHeight(node.left), findHeight(node.right));
+      }
+    }
+  }
+
+  depth(value) {
+    if (!this.includes(value)) return undefined;
+    let node = this.root;
+    let depth = 0;
+    while (node !== null) {
+      if (value < node.data) {
+        depth++;
+        node = node.left;
+      } else if (value > node.data) {
+        depth++;
+        node = node.right;
+      } else {
+        break;
+      }
+    }
+    return depth;
   }
 }
