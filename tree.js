@@ -56,4 +56,82 @@ export default class Tree {
       return node;
     }
   }
+
+  delNode(value) {
+    function getSuccessor(curr) {
+      curr = curr.right;
+      while (curr !== null && curr.left !== null) curr = curr.left;
+      return curr;
+    }
+    let node = this.root;
+    this.root = trulyDelNode(node, value);
+    function trulyDelNode(node, value) {
+      if (node === null) return node;
+      if (node.data > value) node.left = trulyDelNode(node.left, value);
+      else if (node.data < value) node.right = trulyDelNode(node.right, value);
+      else {
+        if (node.left === null) return node.right;
+        if (node.right === null) return node.left;
+
+        const succ = getSuccessor(node);
+        node.data = succ.data;
+        node.right = trulyDelNode(node.right, succ.data);
+      }
+      return node;
+    }
+  }
+
+  levelOrderForEach(callback) {
+    if (typeof callback !== "function") throw new Error("No callback provided");
+    let node = this.root;
+    let queue = [];
+    queue.push(node);
+
+    while (queue.length !== 0) {
+      shiftedElement = queue.shift();
+      callback(shiftedElement.data);
+      if (shiftedElement.right !== null) queue.push(shiftedElement.right);
+      if (shiftedElement.left !== null) queue.push(shiftedElement.left);
+    }
+  }
+
+  preOrderForEach(callback) {
+    if (typeof callback !== "function") throw new Error("No callback provided");
+    let node = this.root;
+    trulyPreOrderForEach(node, callback);
+    function trulyPreOrderForEach(node, callback) {
+      if (node === null) return undefined;
+      callback(node.data);
+      trulyPreOrderForEach(node.left, callback);
+      trulyPreOrderForEach(node.right, callback);
+    }
+  }
+
+  inOrderForEach(callback) {
+    if (typeof callback !== "function") throw new Error("No callback provided");
+    let node = this.root;
+    trulyPreOrderForEach(node, callback);
+    function trulyPreOrderForEach(node, callback) {
+      if (node === null) return undefined;
+      trulyPreOrderForEach(node.left, callback);
+      callback(node.data);
+      trulyPreOrderForEach(node.right, callback);
+    }
+  }
+
+  postOrderForEach(callback) {
+    if (typeof callback !== "function") throw new Error("No callback provided");
+    let node = this.root;
+    trulyPreOrderForEach(node, callback);
+    function trulyPreOrderForEach(node, callback) {
+      if (node === null) return undefined;
+      trulyPreOrderForEach(node.left, callback);
+      trulyPreOrderForEach(node.right, callback);
+      callback(node.data);
+    }
+  }
+
+  height(value){
+    
+  }
 }
