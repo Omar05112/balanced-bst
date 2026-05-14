@@ -88,7 +88,7 @@ export default class Tree {
     queue.push(node);
 
     while (queue.length !== 0) {
-      shiftedElement = queue.shift();
+      let shiftedElement = queue.shift();
       callback(shiftedElement.data);
       if (shiftedElement.right !== null) queue.push(shiftedElement.right);
       if (shiftedElement.left !== null) queue.push(shiftedElement.left);
@@ -168,5 +168,36 @@ export default class Tree {
       }
     }
     return depth;
+  }
+
+  isBalanced() {
+    let node = this.root;
+
+    return trulyIsBalanced(node);
+
+    function trulyIsBalanced(node) {
+      if (node === null) return true;
+      let leftHeight = findHeight(node.left);
+      let rightHeight = findHeight(node.right);
+
+      return (
+        Math.abs(leftHeight - rightHeight) <= 1 &&
+        trulyIsBalanced(node.left) &&
+        trulyIsBalanced(node.right)
+      );
+
+      function findHeight(node) {
+        if (node === null) return -1;
+        else {
+          return 1 + Math.max(findHeight(node.left), findHeight(node.right));
+        }
+      }
+    }
+  }
+
+  rebalance(){
+    let array=[];
+    this.inOrderForEach(value=>array.push(value));
+    this.root= this.buildTree(array);
   }
 }
